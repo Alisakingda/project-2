@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		#main{position: relative;}
+		.box{padding: 10px 0 0 10px;float: left;}
+		.image{padding: 10px;box-shadow: 0 0 5px red;border-radius: 5px;border: 1px solid red;}
+		img{width: 165px;height:auto;border-radius: 5px;}
+	</style>
+	<script type="text/javascript" src="jquery.js"></script>
+</head>
+<body>
+	<div id="main">
+	</div>
+</body>
+	<script type="text/javascript">
+
+		var _main = document.getElementById('main');
+		for(var i=0;i<90;i++){
+			var oDiv = document.createElement('div');
+			oDiv.className = 'box';
+			oDiv.innerHTML = '<div class="image"><img src="img/'+i+'.jpg"></div>';
+			_main.appendChild(oDiv);
+		}
+	</script>
+	<script type="text/javascript">
+		$(window).on('load',function(){
+			waterFall();
+			var dataInt={'data':[{'src':'1.jpg'},{'src':'2.jpg'},{'src':'3.jpg'},{'src':'4.jpg'},{'src':'11.jpg'},{'src':'12.jpg'},{'src':'13.jpg'},{'src':'14.jpg'}]};
+			$(window).on('scroll',function(){
+				// changeScrollHeight();
+				if (changeScrollHeight()) {
+					$.each(dataInt.data,function(index,value){
+						var oDiv = $('<div>').addClass('box').appendTo($('#main'));
+						var oImage = $('<div>').addClass('image').appendTo($(oDiv));
+						var oImg = $('<img>').attr('src','img/'+dataInt.data[index].src).appendTo($(oImage));					
+					})	
+				}
+				waterFall();
+			})
+		})
+
+		function waterFall(){
+			// 先将页面居中显示;
+			var boxs = $('#main>div');
+			var H = boxs.eq(0).outerWidth();
+			var col = Math.floor($(window).width()/H);
+			$('#main').css({
+				'width':H*col,
+				'margin':'0 auto'
+			})
+
+			// 将图片定位完成;
+			var arr = [];
+			boxs.each(function(index,value){
+				var boxH = boxs.eq(index).outerHeight();
+				if (index<col) {
+					arr[index] = boxH;
+				}else{
+					var minH = Math.min.apply(null,arr);
+					var minIndex = $.inArray(minH,arr);
+					$(value).css({
+						'position':'absolute',
+						'top':minH,
+						'left':boxs.eq(minIndex).position().left
+					});
+					arr[minIndex] += boxs.eq(index).outerHeight();
+				}
+			})
+		}
+
+		function changeScrollHeight(){
+			var lastBox = $('#main>div').last();
+			var lastBoxH = lastBox.offset().top+Math.floor(lastBox.outerHeight()/2);
+			console.log(lastBoxH);
+			var scrollH = $(window).scrollTop();
+			console.log(scrollH);
+			var screenH = $(window).height();
+			console.log(screenH);
+			return (lastBoxH<scrollH+screenH)?true:false;
+		}
+	</script>
+</html>

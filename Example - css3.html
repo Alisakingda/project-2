@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		#main{
+			position: relative;
+			-webkit-column-width:180px;
+			   -moz-column-width:180px;
+			     -o-column-width:180px;
+			    -ms-column-width:180px;
+			-webkit-column-gap:10px;
+			   -moz-column-gap:10px;
+			     -o-column-gap:10px;
+			    -ms-column-gap:10px;
+			    /*主要实现的基本要素，很实用*/
+		}
+		.box{padding: 10px 0 0 10px;float: left;}
+		/*.image{padding: 10px;box-shadow: 0 0 5px red;border-radius: 5px;border: 1px solid red;}*/
+		img{width: 165px;height:auto;border-radius: 5px;}
+	</style>
+</head>
+<body>
+	<div id="main">
+	</div>
+</body>
+	<script type="text/javascript">
+
+		var _main = document.getElementById('main');
+		for(var i=0;i<19;i++){
+			var oDiv = document.createElement('div');
+			oDiv.className = 'box';
+			oDiv.innerHTML = '<div class="image"><img src="images/P_0'+i+'.jpg"></div>';
+			_main.appendChild(oDiv);
+		}
+
+		window.onload = function(){
+			var datainit = {data:[{'src':'1.jpg'},{'src':'2.jpg'},{'src':'3.jpg'},{'src':'4.jpg'},{'src':'5.jpg'},{'src':'6.jpg'},{'src':'7.jpg'},{'src':'8.jpg'},{'src':'9.jpg'}]}
+			window.onscroll = function(){
+				// checkScrollHeight();
+				if (checkScrollHeight()) {
+					var parent = document.getElementById('main');
+					for(var i=0;i<datainit.data.length;i++){
+						var oDiv = document.createElement('div');
+						oDiv.className = 'box';
+						oDiv.innerHTML = '<div class="image"><img src="images/P_0'+datainit.data[i].src+'"></div>';
+						parent.appendChild(oDiv);						
+					}
+				}
+			}
+		}
+		function getClass(parent,box){
+			var oElements = parent.getElementsByTagName('*');
+			var arr = new Array();
+			for(var i=0;i<oElements.length;i++){
+				if (oElements[i].className == box) {
+					arr.push(oElements[i]);
+				}
+			}
+			return arr;
+		}
+
+		// 判断页面中是否能够开始加载数据
+		function checkScrollHeight(){	
+			var parents = document.getElementById('main');
+			var boxs = getClass(parents,'box');
+			var lastHeight = boxs[boxs.length-1].offsetTop+Math.floor(boxs[boxs.length-1].offsetHeight/2);
+			var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop;	// 解决兼容性问题
+			var screenHeight = document.documentElement.clientHeight || document.body.clientHeight;	//解决兼容性问题
+			return (scrollHeight+screenHeight>lastHeight)?true:false;
+		}
+	</script>
+</html>
